@@ -48,7 +48,7 @@ type CommandArg struct {
 
 // a callback that decides whether a command can be run or not
 type CommandCheck struct {
-	Name string
+	Name     string
 	Callback func(*Ctx) bool
 }
 
@@ -60,7 +60,7 @@ type Converter struct {
 
 // helper function that gets the usage for a command minus the prefix
 func (c Command) Usage() string {
-	args := []string{}
+	var args []string
 
 	for _, arg := range c.Args {
 		formattedArg := arg.Name

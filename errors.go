@@ -28,7 +28,7 @@ func (e MissingRequiredArgumentError) Error() string {
 	return fmt.Sprintf("required argument \"%s\" at position %v is missing", e.Arg.Name, e.ArgPosition)
 }
 
-// returned when a command check fails 
+// returned when a command check fails
 type CheckError struct {
 	// the check that failed
 	Check *CommandCheck

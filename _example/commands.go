@@ -25,7 +25,7 @@ var (
 		Name: "Is Admin",
 		Callback: func(c *recv.Ctx) bool {
 			perms, err := c.Session.UserChannelPermissions(c.Message.Author.ID, c.Message.ChannelID)
-			if err != nil || perms & discordgo.PermissionAdministrator == 0 {
+			if err != nil || perms&discordgo.PermissionAdministrator == 0 {
 				c.Session.ChannelMessageSend(c.Message.ChannelID, "missing permissions: you are not an admin")
 				return false
 			}
@@ -133,7 +133,7 @@ func init() {
 
 	// command that only runs if the user's name is QuaKe and they have admin
 	router.AddCommand(recv.Command{
-		Name: "quakeadminonly",
+		Name:        "quakeadminonly",
 		Description: "quake admin only: otherwise go away",
 		Checks: []recv.CommandCheck{
 			adminCheck,
