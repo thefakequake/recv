@@ -48,7 +48,7 @@ router.AddCommand(recv.Command{
 
 ```go
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
-  res, err := router.ProcessCommands(".", d, m)
+  res, err := router.ProcessCommands(".", s, m)
   if err != nil {
     fmt.Println(err)
     return
