@@ -11,7 +11,7 @@ type CommandRouter struct {
 	// maps command names to command objects
 	commands map[string]Command
 	// maps alias names to command names
-	aliases  map[string]string
+	aliases map[string]string
 }
 
 // creates a new CommandRouter
@@ -43,17 +43,35 @@ func (r CommandRouter) GetCommand(name string) (Command, bool) {
 	return r.commands[commID], true
 }
 
+// returns all command names in lowercase - use GetCommandList to return all command objects
+func (r CommandRouter) GetCommandNameList() []string {
+	var names []string
+	for n := range r.commands {
+		names = append(names, n)
+	}
+	return names
+}
+
+// returns all command objects - use GetCommandNameList to get list of only command names
+func (r CommandRouter) GetCommandList() []Command {
+	var commands []Command
+	for _, c := range r.commands {
+		commands = append(commands, c)
+	}
+	return commands
+}
+
 // the result of calling ProcessCommands, contains the handler for the function and command that was parsed
 type ProcessResult struct {
 	// command that was processed from the message, nil if no command was found
-	Command  *Command
+	Command *Command
 	// callback function that runs the command callback
 	Callback func()
 }
 
 // uses the prefix of the bot, session and message object in order to determine the handler and context of the command
 func (r CommandRouter) ProcessCommands(prefix string, session *discordgo.Session, message *discordgo.MessageCreate) (*ProcessResult, error) {
-	result := ProcessResult{}
+	var result ProcessResult
 	if !strings.HasPrefix(message.Content, prefix) {
 		return &result, nil
 	}
@@ -86,8 +104,7 @@ func (r CommandRouter) ProcessCommands(prefix string, session *discordgo.Session
 		}
 	}
 
-	processedArgs := []interface{}{}
-
+	var processedArgs []interface{}
 	if !comm.NoJoin && len(commArgs) > len(comm.Args) {
 		commArgs = append(commArgs[:len(comm.Args)-1], strings.Join(commArgs[len(comm.Args)-1:], " "))
 	}
@@ -114,8 +131,8 @@ func (r CommandRouter) ProcessCommands(prefix string, session *discordgo.Session
 			if !ok {
 				return &result, ConversionError{
 					ArgPosition: i + 1,
-					Arg: &arg,
-					Input: convert.(string),
+					Arg:         &arg,
+					Input:       convert.(string),
 				}
 			}
 			convert = output
